@@ -38,11 +38,9 @@ $ git add wsh.c
 $ git commit  
 $ git push origin main  
 or  
-$ git push -u origin main  // Pushes main and sets tracking so next time you can just run git push  
-                           // without specifying remote and branch.  
+$ git push -u origin main  // Pushes main and sets tracking so next time you can just run git push without specifying remote and branch.  
 $ git mv file_from file_to // to truly rename a file.   
-$ git remote set-url origin NEW_URL // If you renamed your repository on github, run this to update the local clone  
-                                    // to point to the new repository url.  
+$ git remote set-url origin NEW_URL // If you renamed your repository on github, run this to update the local clone to point to the new repository url.  
 git blame // to find out why certain code exists.  
   
   
@@ -79,7 +77,7 @@ git blame // to find out why certain code exists.
   ...  
   Required By     : None  
   ...  
-  Поэтому можно просто   
+  Therefore we can just
   [harrol3@kold ~]$ sudo pacman -Rs electron28 electron30  
   
   ## WARNING: Deprecated option 'ALL_microcode' found. Update '/etc/mkinitcpio.d/linux-lts.preset' to use the 'microcode' hook instead.  
