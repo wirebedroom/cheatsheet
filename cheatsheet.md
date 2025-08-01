@@ -22,28 +22,28 @@ Reference: https://sourceware.org/gdb/current/onlinedocs/gdb.html/Save-Breakpoin
   $ ./configure CFLAGS="-g3 -O0 -fno-inline -fno-lto" LDFLAGS="-g"  
   $ make  
   $ objdump --syms Src/zsh | grep debug  
-  $ file Src/zsh <!--- should say "with debug_info". -->  
+  $ file Src/zsh // should say "with debug_info".  
   $ cd Src  
   $ gdb ./zsh  
-  (gdb) break input.c:inputline <!--- inputline is a static function, but the breakpoint is set successfully. -->  
+  (gdb) break input.c:inputline // inputline is a static function, but the breakpoint is set successfully.  
   Breakpoint 1 at 0x6b5a7: file input.c, line 370.  
   
 # GIT  
 $ git init  
-$ git branch -m main <!--- to rename master to main. -->  
+$ git branch -m main // to rename master to main.  
 $ git status  
 $ git remote add origin https://github.com/username/app.git  
-$ git remote -v <!--- list all the configured remote repositories. -->  
+$ git remote -v // list all the configured remote repositories.  
 $ git add wsh.c  
 $ git commit  
 $ git push origin main  
 or  
-$ git push -u origin main  <!--- Pushes main and sets tracking so next time you can just run git push  
-                                 without specifying remote and branch. -->  
-$ git mv file_from file_to <!--- to truly rename a file. -->  
-$ git remote set-url origin NEW_URL <!--- If you renamed your repository on github, run this to update the local clone  
-                                        to point to the new repository url. -->  
-git blame <!--- to find out why certain code exists. --->  
+$ git push -u origin main  // Pushes main and sets tracking so next time you can just run git push  
+                           // without specifying remote and branch.  
+$ git mv file_from file_to // to truly rename a file.   
+$ git remote set-url origin NEW_URL // If you renamed your repository on github, run this to update the local clone  
+                                    // to point to the new repository url.  
+git blame // to find out why certain code exists.  
   
   
 # pacman errors  
@@ -242,20 +242,13 @@ A huge bonus of this is that you can leave stuff running while the terminal is c
   5. ctrl + End = go to bottom of page;  
   ## MacOS shortcuts  
   1. cmd + Space = change language;  
-  2. cmd + H = hide window;  
+  2. cmd + H = hide window;  // better than minimizing.  
   3. cmd + Tab = reveals an open or hidden window.  
      To close it - hold down cmd and press Tab to get to the app the window of which you want to reveal  
      and then release your finger off of cmd;  
   4. cmd + M = minimize the front window to the Dock   
   5. cmd + Tab - cmd+ alt/option = to select application the window of which you want to un-minimize by using cmd and Tab,  
      and then, while still holding cmd, press alt/option to un-minimize the window;  
-  <!--- So, basically, you have to choose between hiding your windows and minimizing them to the dock.  
-  Hiding happens instantly, without the animation that minimizing has and you can hide multiple windows   
-  without clicking on each one, you just need to press cmd + H a few times until every window is hidden.  
-  To open a hidden window you just need to cmd + Tab to the application.  
-  Minimizing doesn't happen as fast as hiding does, to minimize multiple windows you have to click on each one.  
-  To bring up a minimized window you have to press cmd + Tab and then alt/option while still holding down cmd,  
-  which is manageable, but isn't as fast as cmd + Tab. -->  
   6. ctrl + arrow = switch between windows;  
   7. cmd + Backspace = erase the line before cursor;  
   8. cmd + ctrl + F = fullscreen mode;  
