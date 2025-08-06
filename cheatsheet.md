@@ -187,64 +187,77 @@ If you can't connect to the internet all of a sudden:
     
   If you encounter the warning "Warning: os-prober will not be executed to detect other bootable partitions", run  
   $ nano /etc/default/grub  
-    
   There you need to look for the setting "GRUB_DISABLE_OS_PROBER=false" which is probably commented out. You need to uncomment it.  
     
   ## Post-installation  
   Use https://wiki.archlinux.org/title/NetworkManager#nmcli_examples nmcli commands to connect to wifi.  
 
-# KVM Windows 10 setup on Arch
-$ sudo pacman -S qemu-desktop
-$ yay -S quickemu
-$ quickget windows 10
-$ quickemu --vm windows-10.conf
-
-For file sharing you need to install samba, create a file /etc/samba/smb.conf and paste all text from https://git.samba.org/samba.git/?p=samba.git;a=blob_plain;f=examples/smb.conf.default;hb=HEAD into it. Then run
-$ sudo systemctl enable smb.service
-$ quickemu --vm windows-10.conf
-By default samba shares ~/Public.
-
-If you get Display 'sdl' is not available, you need to install qemu-desktop.
-If you get ERROR! QEMU 6.0.0 or newer is required, detected 10.0.0., then you need to open /usr/bin/quickemu, go to line 1941, which should read
-QEMU_VER_SHORT=$(echo "${QEMU_VER_LONG//./}" | cut -c1-2)
-and replace it with
-QEMU_VER_SHORT=$(echo "${QEMU_VER_LONG//./}" | sed 's/.$//')
-
-References:
-1. https://forum.endeavouros.com/t/quickemu-currently-broken/71612/6
-2. https://github.com/quickemu-project/quickemu/issues/1647
-And archwiki, of course.
-
-# GParted glitch
-After I tried to boot into a flashdrive with GParted, my arch installation disappeared from BIOS. To fix it, I booted into a flashdrive with archiso, mounted everything with
-$ mkdir /mnt/boot/efi
-$ mount /dev/nvme0n1p1 /mnt/boot/efi
-then did
-$ arch-chroot /mnt
-$ mount /dev/nvme0n1p4 /home 
-Then I reinstalled the kernel with 
-$ sudo pacman -S linux 
-and ran
-$ grub-install /dev/nvme0n1
-$ exit
-$ reboot
-
-I think reinstalling grub was what fixed the issue, reinstalling the kernel was probably unnecessary.
+# KVM Windows 10 setup on Arch  
+$ sudo pacman -S qemu-desktop  
+$ yay -S quickemu  
+$ quickget windows 10  
+$ quickemu --vm windows-10.conf  
+  
+For file sharing you need to install samba, create a file /etc/samba/smb.conf and paste all text from https://git.samba.org/samba.git/?p=samba.git;a=blob_plain;f=examples/smb.conf.default;hb=HEAD into it. Then run  
+$ sudo systemctl enable smb.service  
+$ quickemu --vm windows-10.conf  
+By default samba shares ~/Public.  
+  
+If you get Display 'sdl' is not available, you need to install qemu-desktop.  
+If you get ERROR! QEMU 6.0.0 or newer is required, detected 10.0.0., then you need to open /usr/bin/quickemu, go to line 1941, which should read  
+QEMU_VER_SHORT=$(echo "${QEMU_VER_LONG//./}" | cut -c1-2)  
+and replace it with  
+QEMU_VER_SHORT=$(echo "${QEMU_VER_LONG//./}" | sed 's/.$//')  
+  
+References:  
+1. https://forum.endeavouros.com/t/quickemu-currently-broken/71612/6  
+2. https://github.com/quickemu-project/quickemu/issues/1647  
+And archwiki, of course.  
+  
+# GParted glitch  
+After I tried to boot into a flashdrive with GParted, my arch installation disappeared from BIOS. To fix it, I booted into a flashdrive with archiso, mounted everything with  
+$ mkdir /mnt/boot/efi  
+$ mount /dev/nvme0n1p1 /mnt/boot/efi  
+then did  
+$ arch-chroot /mnt  
+$ mount /dev/nvme0n1p4 /home   
+Then I reinstalled the kernel with   
+$ sudo pacman -S linux   
+and ran  
+$ grub-install /dev/nvme0n1  
+$ exit  
+$ reboot  
+  
+I think reinstalling grub was what fixed the issue, reinstalling the kernel was probably unnecessary.  
   
 # How to install from AUR without yay  
 $ git clone https://aur.archlinux.org/_repositoryname_.git  
 $ cd _repositoryname_  
 $ makepkg  
-  
 Now you should have a _repositoryname_.pkg.tar.zst file in your working directory.  
 Use `ls` to display it's full name, copy it and then run  
 $ sudo pacman -U _nameofthefileyoujustcopied_.pkg.tar.zst  
   
-# nvim  
+# neovim  
 I didn't like the way matching parentheses were formatted so I went into   
 .local/share/nvim/site/pack/packer/start/nord.nvim/lua/nord/theme.lua and edited line 91 to look like this:  
 MatchParen = { fg = nord.nord3_gui_bright, bg = nord.nord4_gui, style = "reverse"},  
 Reference: https://github.com/shaunsingh/nord.nvim  
+  ## Installing neovim on Windows  
+  Run these two commands under a non-administrator user in powershell to install scoop package manager:  
+  $ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser  
+  $ Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression  
+  Install neovim:  
+  $ scoop install neovim  
+  Now neovim is going to suggest installing extras/vcredist2022. To do it, first install git  
+  $ scoop install git  
+  Now you can add the extras repository to scoop:  
+  $ scoop bucket add extras  
+  Now you can install vcredist2022  
+  $ scoop install vcredist2022  
+
+# Installing winget on Windows
+Go to https://github.com/microsoft/winget-cli, then Releases, download the .msix bundle and run it.
   
 # tmux basics  
 Whenever you open a new terminal, run tmux as your first command.  
@@ -256,6 +269,7 @@ A huge bonus of this is that you can leave stuff running while the terminal is c
 The crop is meant to crop the entire image. If you want to remove redundant content of a layer try to make a selection, then Ctrl+Shift+I to invert the selection and then Del to remove content.
   
 # Shortcuts  
+
   ## Text shortcuts  
   1. ctrl/cmd + arrow = move the cursor to the start/end of a line.   
      If pressed when the cursor is already at the end of a line, the cursor will move to the end of the paragraph;  
@@ -263,6 +277,7 @@ The crop is meant to crop the entire image. If you want to remove redundant cont
   3. alt/option + arrow = move to the start of next/previous word;  
   4. alt/option + Backspace = deletes the word before cursor;  
   5. shift + arrow = selects the text. Becomes very powerful when combined with the shortcuts 1 and 3.  
+
   ## Browser shortcuts  
   1. ctrl/cmd + T = open new tab;  
   2. ctrl/cmd + W = close current tab;  
@@ -271,13 +286,19 @@ The crop is meant to crop the entire image. If you want to remove redundant cont
   5. ctrl/cmd + F = find in page;  
   6. ctrl/cmd + mousewheel up/ mousewheel down = zoom in/ zoom out;  
   7. cmd + arrow = switch between tabs; ^2a6ef0  
-  8. ctrl/cmd + Shift + T = open closed tab;  
+  8. ctrl/cmd + Shift + T = open closed tab.
+
   ## Windows shortcuts  
   1. Win + D = minimize all windows;  
   2. Win + downarrow = minimize top window;  
   3. F11 = fullscreen mode;  
   4. Win + ; = emoji keyboard;  
-  5. ctrl + End = go to bottom of page;  
+  5. ctrl + End = go to bottom of page.
+  ### Multiple desktops
+  1. Ctrl + Win + D = open a new desktop;
+  2. Ctrl + Win + F4 = close the current one;
+  3. Ctrl + Win + Left/Right arrow = cycle through the desktops.
+
   ## MacOS shortcuts  
   1. cmd + Space = change language;  
   2. cmd + H = hide window;  // better than minimizing.  
