@@ -244,20 +244,11 @@ I didn't like the way matching parentheses were formatted so I went into
 MatchParen = { fg = nord.nord3_gui_bright, bg = nord.nord4_gui, style = "reverse"},  
 Reference: https://github.com/shaunsingh/nord.nvim  
   ## Installing neovim on Windows  
-  Run these two commands under a non-administrator user in powershell to install scoop package manager:  
-  $ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser  
-  $ Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression  
-  Install neovim:  
-  $ scoop install neovim  
-  Now neovim is going to suggest installing extras/vcredist2022. To do it, first install git  
-  $ scoop install git  
-  Now you can add the extras repository to scoop:  
-  $ scoop bucket add extras  
-  Now you can install vcredist2022  
-  $ scoop install vcredist2022  
+  Run this with admin privileges:  
+  $ winget install neovim  
 
-# Installing winget on Windows
-Go to https://github.com/microsoft/winget-cli, then Releases, download the .msix bundle and run it.
+# Installing winget on Windows  
+Go to https://github.com/microsoft/winget-cli, then Releases, download the .msix bundle and run it.  
   
 # tmux basics  
 Whenever you open a new terminal, run tmux as your first command.  
