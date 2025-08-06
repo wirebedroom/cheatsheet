@@ -13,9 +13,7 @@ $ makepkg --nobuild --skippgpcheck
   
 # GDB  
 save breakpoints <filename>  
-  Save all current breakpoint definitions to a file suitable for use  
-  in a later debugging session.  To read the saved breakpoint  
-  definitions, use the "source" command.  
+  Save all current breakpoint definitions to a file suitable for use in a later debugging session. To read the saved breakpoint definitions, use the "source" command.  
 Reference: https://sourceware.org/gdb/current/onlinedocs/gdb.html/Save-Breakpoints.html  
   
   ## Building a program written in c that can be debugged with gdb without ignoring static functions and stuff like that  
@@ -134,7 +132,17 @@ git blame // to find out why certain code exists.
   ├─nvme0n1p2 259:2    0   1.5G  0 part [SWAP]  
   ├─nvme0n1p3 259:3    0  97.7G  0 part /  
   └─nvme0n1p4 259:4    0 295.3G  0 part /home  
+
+  ## Mounting wisdom
+  - EFI can be in /boot/efi. Some people prefer /boot instead, but I prefer /boot/efi because kernels are stored in /boot, and may conflict if you dual-boot multiple Linux distros, and I don't put my EFI partition that large anyway 
+  - BIOS boot only exists if you run MBR and legacy BIOS IIRC, I don't think legacy BIOS supports GPT, and the boot records are stored in the partition table, not in a partition file system. 
+  - Swap doesn't get mounted, you run swapon on the file. To format a partition or file as swap, run mkswap on it. I usually choose a file on a file system instead of a separate partition, to do that, run fallocate -l <size> <file> e.g fallocate -l 8G /swap, then mkswap /swap and make the permissions secure with chown root: /swap && chmod 600 /swap 
+  - Root is mounted at /. In /etc/fstab, set the "pass" option (the last number) to 1. Root should be 1, other file systems should be 2 to be checked for errors (fsck), and other things should be 0 like swap which can't/won't be checked for errors. 
+  - Home partition depends. If you want to use the partition for all users, have the user directories in the partition and mount it at /home. If you want it just for one user (e.g user) mount it at /home/user (make sure to chown the mount directory after mounting it). Although your home directory doesn't have to be in /home, it's generally recommended to have it there 
+  - For other partitions, like files, I usually just mount them in some directory in the root directory, like /files, but usually you can mount them in /mnt or in a subdirectory of /mnt. Removable media support should come with your DE, if you don't have one, you can use something like udiskie, they will be mounted in /run/media/username, I like to create a symlink /media → /run/media.
   
+  Reference: https://www.reddit.com/r/archlinux/comments/15av7rm/where_do_i_mount_my_partitions/
+
   ## Backing up home  
   $ sudo tar -cvf /run/media/harrol3/home-backup/home-backup.tar /home/harrol3  
   
@@ -142,9 +150,7 @@ git blame // to find out why certain code exists.
   $ setterm --blength=0  
   
   ## If stuck in sleep mode  
-  Always start with removing/disconnecting the battery as well as the power cord and then holding   
-  the power button down for around 20 seconds to discharge the capacitors. then put the battery back in and   
-  see if the issue is fixed.  
+  Always start with removing/disconnecting the battery as well as the power cord and then holding the power button down for around 20 seconds to discharge the capacitors. Then put the battery back in and see if the issue is fixed.  
   
   ## Drive formatting  
   To format the entire `sda` drive as `exfat`, run the following:  
@@ -157,16 +163,10 @@ git blame // to find out why certain code exists.
   $ sudo systemctl stop syncthing@username  
   
   ## KDE-specific  
-  Disable and re-enable your Global theme and kwin scripts after major updates to avoid `dolphin` slowing down.  
-  This will probably require you to re-enable custom icons as well. Also if your konsole colors change,  
-  press "Ctrl + Shift + ," go to Profiles > Appearance and edit the colors there.  
-  The color 5 colors the directories in zsh.  
+  Disable and re-enable your Global theme and kwin scripts after major updates to avoid `dolphin` slowing down. This will probably require you to re-enable custom icons as well. Also if your konsole colors change, press "Ctrl + Shift + ," go to Profiles > Appearance and edit the colors there. The color 5 colors the directories in zsh.  
   
   ## Printer drivers  
-  Used this website to find printer driver https://www.openprinting.org/printers  
-  installed this and chose the relevant foo2hp driver  
-  https://aur.archlinux.org/packages/foo2zjs-nightly  
-  also installed hplip which didn't help  
+  Used this website to find printer driver https://www.openprinting.org/printers nstalled this and chose the relevant foo2hp driver https://aur.archlinux.org/packages/foo2zjs-nightly also installed hplip which didn't help.  
   
   
 # Network connection  
@@ -192,8 +192,46 @@ If you can't connect to the internet all of a sudden:
     
   ## Post-installation  
   Use https://wiki.archlinux.org/title/NetworkManager#nmcli_examples nmcli commands to connect to wifi.  
+
+# KVM Windows 10 setup on Arch
+$ sudo pacman -S qemu-desktop
+$ yay -S quickemu
+$ quickget windows 10
+$ quickemu --vm windows-10.conf
+
+For file sharing you need to install samba, create a file /etc/samba/smb.conf and paste all text from https://git.samba.org/samba.git/?p=samba.git;a=blob_plain;f=examples/smb.conf.default;hb=HEAD into it. Then run
+$ sudo systemctl enable smb.service
+$ quickemu --vm windows-10.conf
+By default samba shares ~/Public.
+
+If you get Display 'sdl' is not available, you need to install qemu-desktop.
+If you get ERROR! QEMU 6.0.0 or newer is required, detected 10.0.0., then you need to open /usr/bin/quickemu, go to line 1941, which should read
+QEMU_VER_SHORT=$(echo "${QEMU_VER_LONG//./}" | cut -c1-2)
+and replace it with
+QEMU_VER_SHORT=$(echo "${QEMU_VER_LONG//./}" | sed 's/.$//')
+
+References:
+1. https://forum.endeavouros.com/t/quickemu-currently-broken/71612/6
+2. https://github.com/quickemu-project/quickemu/issues/1647
+And archwiki, of course.
+
+# GParted glitch
+After I tried to boot into a flashdrive with GParted, my arch installation disappeared from BIOS. To fix it, I booted into a flashdrive with archiso, mounted everything with
+$ mkdir /mnt/boot/efi
+$ mount /dev/nvme0n1p1 /mnt/boot/efi
+then did
+$ arch-chroot /mnt
+$ mount /dev/nvme0n1p4 /home 
+Then I reinstalled the kernel with 
+$ sudo pacman -S linux 
+and ran
+$ grub-install /dev/nvme0n1
+$ exit
+$ reboot
+
+I think reinstalling grub was what fixed the issue, reinstalling the kernel was probably unnecessary.
   
-# How do install from AUR without yay  
+# How to install from AUR without yay  
 $ git clone https://aur.archlinux.org/_repositoryname_.git  
 $ cd _repositoryname_  
 $ makepkg  
@@ -213,7 +251,9 @@ Whenever you open a new terminal, run tmux as your first command.
 When you’re done, before you close the terminal press ‘Ctrl+B’ followed by ‘d’ for ‘detatch’. This will basically keep your session running in the background after the terminal closes.  
 Then, when you open your next terminal session, run tmux a for ‘attach’ and you’ll be back where you left off.  
 A huge bonus of this is that you can leave stuff running while the terminal is closed, like a long update or install command.  
-  
+
+# Krita cropping
+The crop is meant to crop the entire image. If you want to remove redundant content of a layer try to make a selection, then Ctrl+Shift+I to invert the selection and then Del to remove content.
   
 # Shortcuts  
   ## Text shortcuts  
