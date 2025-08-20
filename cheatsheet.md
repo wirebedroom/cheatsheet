@@ -166,7 +166,10 @@ git blame // to find out why certain code exists.
   
   ## List systemd services
   $ systemctl --type=service
-  
+
+  ## Reflector mirrors
+  $ sudo reflector --save /etc/pacman.d/mirrorlist --protocol https --country Russia,Belarus,Latvia,Estonia,Lithuania,Poland,Finland,Sweden,Moldova --latest 30 --sort age --fastest 30
+
 # Network connection  
   
 If you can't connect to the internet all of a sudden:  
@@ -223,6 +226,8 @@ If you can't connect to the internet all of a sudden:
   nameserver 9.9.9.9  
   options use-vc  
 
+  ## If you hotspot from android phone that's connected to VPN, that VPN doesn't get transferred to PC.  
+
 # Arch installation  
   ## Grub configuration  
   After using arch-chroot (step 3.2) and installing grub, you need to configure it with the following commands:  
@@ -235,7 +240,6 @@ If you can't connect to the internet all of a sudden:
   If you encounter the warning "Warning: os-prober will not be executed to detect other bootable partitions", run  
   $ nano /etc/default/grub  
   There you need to look for the setting "GRUB_DISABLE_OS_PROBER=false" which is probably commented out. You need to uncomment it.  
-    
   ## Post-installation  
   Use https://wiki.archlinux.org/title/NetworkManager#nmcli_examples nmcli commands to connect to wifi.  
 
@@ -261,8 +265,8 @@ References:
 2. https://github.com/quickemu-project/quickemu/issues/1647  
 And archwiki, of course.  
 
-## Clipboard sharing to Windows guest
-Download https://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-latest.exe  
+  ## Clipboard sharing to Windows guest
+  Download https://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-latest.exe  
 
 # GParted glitch  
 After I tried to boot into a flashdrive with GParted, my arch installation disappeared from BIOS. To fix it, I booted into a flashdrive with archiso, mounted everything with  
@@ -293,6 +297,9 @@ I didn't like the way matching parentheses were formatted so I went into
 .local/share/nvim/site/pack/packer/start/nord.nvim/lua/nord/theme.lua and edited line 91 to look like this:  
 MatchParen = { fg = nord.nord3_gui_bright, bg = nord.nord4_gui, style = "reverse"},  
 Reference: https://github.com/shaunsingh/nord.nvim  
+  ## Interactive find and replace
+  :%s/thick/\\orbitThickness/gc
+  The c flag means confirmation.
   ## Installing neovim on Windows  
   Run this with admin privileges:  
   $ winget install neovim  
@@ -329,17 +336,6 @@ The crop is meant to crop the entire image. If you want to remove redundant cont
   7. cmd + arrow = switch between tabs; ^2a6ef0  
   8. ctrl/cmd + Shift + T = open closed tab.
 
-  ## Windows shortcuts  
-  1. Win + D = minimize all windows;  
-  2. Win + downarrow = minimize top window;  
-  3. F11 = fullscreen mode;  
-  4. Win + ; = emoji keyboard;  
-  5. ctrl + End = go to bottom of page.
-  ### Multiple desktops
-  1. Ctrl + Win + D = open a new desktop;
-  2. Ctrl + Win + F4 = close the current one;
-  3. Ctrl + Win + Left/Right arrow = cycle through the desktops.
-
   ## MacOS shortcuts  
   1. cmd + Space = change language;  
   2. cmd + H = hide window;  // better than minimizing.  
@@ -353,5 +349,378 @@ The crop is meant to crop the entire image. If you want to remove redundant cont
   7. cmd + Backspace = erase the line before cursor;  
   8. cmd + ctrl + F = fullscreen mode.  
 
-# Things you cannot do on Windows:  
-- make Windows Explorer open a specific folder on launch.
+# Windows  
+  ## Windows shortcuts  
+  1. Win + D = minimize all windows;  
+  2. Win + downarrow = minimize top window;  
+  3. F11 = fullscreen mode;  
+  4. Win + ; = emoji keyboard;  
+  5. ctrl + End = go to bottom of page.  
+  ### Multiple desktops  
+  1. Ctrl + Win + D = open a new desktop;  
+  2. Ctrl + Win + F4 = close the current one;  
+  3. Ctrl + Win + Left/Right arrow = cycle through the desktops.  
+
+  ## Things you cannot do on Windows:  
+  - make Windows Explorer open a specific folder on launch.  
+
+  ## MS Word  
+  Turning formatting symbols on can help.
+  ### Page numbering  
+  Say you want to start page numbering from page 3. When you insert page numbering there, it will appear on pages 1 and 2 as well. After that go to page 3, Insert > Header and footer > special formatting for first page (or smth like that). This will make the numbering on pages 1 and 2 disappear.  
+  ### How to remove a footer that won't go away  
+  Make a section break from the next page, then disable the "same as in the previous section" button, then double-click on the ruler and select the value of the upper and lower margins.  
+  ### How to add numbers to equations  
+  You can create a template that can be used to automatically generate the table and equation with number to the right:  
+    1. Insert → Table → 3x1.  
+    2. Right click table → Table Properties.  
+    3. In Table Tab, Check Preferred Width → Percent → 100.  
+    4. In Column Tab, set preferred width to 7%, 86% and 7% for 1st 2nd and 3rd column respectively. These values work well for Times New Roman 12pt equation numbers. (Other percentages will work provided they add up to 100%.)  
+    5. Click Ok.  
+    6. Insert → Equation into center column (type in current equation or placeholder).  
+    7. Click References → Insert Caption. Select Label: Equation Position: Above or Below  
+    8.  Adjust numbering as desired.  
+    9.  Cut and past number from above location to right column of equation table.  
+    10. Right-align text in right column.  
+    11. Center equation column.  
+    12. Highlight the entire table.  
+    13. Turn off borders.  
+    14. Re-highlight the entire table.  
+    15. Select Insert → Equation → Save Selection to Equation Gallery.  
+  Now if you want to insert an equation with automatic numbering in standard journal/conference paper format, just select the template you have made from the equation gallery and it will insert it into the document as desired.  
+  Equation numbers will be automatically updated and references can be made to them using the References → Cross Reference option for equations.  
+  NOTE: If you'd like to save this newly formatted equation as a keyboard shortcut (like pressing the Alt and + keys simultaneously in order to create a new equation), you can do so by going to File → Options → Customize Ribbon → Customize Shortcuts and then selecting "Building Blocks". Search for your newly created equation template in the right list, then assign a keyboard shortcut to it.  
+  Reference: https://superuser.com/questions/594559/how-do-you-easily-add-equation-numbers-to-microsoft-word-2010-equations  
+
+  ## MathCAD 15  
+  ### Export plots in high quality
+  Save your file as html. The images will be saved in highest quality.  
+  ### Cannot add normal Delta and italic i as captions to graph because turning on italic makes all text italic  
+  First turn off italic, type the Delta and drag it onto the graph. Now turn on italic -- the Delta will not change. Type i, drag it to the graph.  
+
+# Latex  
+  ## Saving tikz images to png   
+  \documentclass[tikz,border=10pt,convert]{standalone} % convert makes it png.  
+
+  ## Manual font installation  
+  
+### Zeroth  
+  
+Before you start make sure, that there is really no possibility for an installation with the package manager of your TeX distribution. For TeX Live see also the script getnonfreefonts (here on TeX.SX user dcmt wrote a nice answer as well) and this question and answer: Error in TeX Live – Font ... not loadable: Metric (TFM) file not found .  
+  
+In wide parts already described in short in TeX Users Group: Installing TeX fonts.  
+  
+Siep Kroonenberg describes a different method in Font installation the shallow way (PDF, website of Dutch TeX users group NTG; the same as TUGboat article: tb86kroonenberg-fonts.pdf.)  
+  
+### First  
+  
+You have to install the font files into a local texmf tree.  
+  
+    For MiKTeX you perhaps have to create such a local texmf tree.  
+  
+    In TeX Live you somewhere have already a directory texmf-local for a system-wide local installation (system variable TEXMFLOCAL), but you can also create a user specific path (TEXMFHOME). To find out the actual paths or whether they already exist you can input kpsewhich --var-value=TEXMFLOCAL or with TEXMFHOME respectively.  
+    Installing of fonts in TEXMFHOME is not recommended, because afterwards you must do a manual update every time any Type1 font (see below) related stuff is updated! See Why shouldn't I use getnonfreefonts to install additional fonts? Why shouldn't I use updmap when installing or removing fonts? for all the gory details (and what to do if you read this warning too late).  
+  
+If the font package comes in a packed file, you can in most cases safely extract with subdirectories into this local texmf tree, but you should control this before doing so by comparing with the following tree structure. For instance perhaps all needed subdirectories are packed under a needless texmf directory.  
+Note: Sometimes map files are twice included there. In recent TeX distributions you only need the ones, which are found as mentioned below in <local-texmf>/fonts/map/<engine-name>/..., not these in <local-texmf>/<engine-name>/... – mostly <engine-name> is dvips, but sometimes also pdftex, and rarely just another one.  
+  
+If there is no subdirectory structure in the packed file, you have to create it under <local-texmf> copying the structure of the according main texmf tree (known as TDS, the TeX Directory Structure) – here an almost full structure is shown (in the main texmf tree[s] it is actually more complex), for a single font package very likely only parts are necessary:  
+  
+<local-texmf>  
+      +--fonts  
+          |--afm  
+          |   +--<font-package-name>  
+          |           +--<*.afm files>  
+          |--enc  
+          |   +--<engine-name>  
+          |           +--<font-package-name>  
+          |                   +--<*.enc files>  
+          |--map  
+          |   +--<engine-name>  
+          |           +--<font-package-name>  
+          |                   +--<*.map files>  
+          |--ofm  
+          |   +--<font-package-name>  
+          |           +--<*.ofm files>  
+          |--opentype  
+          |     +--<font-package-name>  
+          |             +--<*.otf files>  
+          |--ovf  
+          |   +--<font-package-name>  
+          |           +--<*.ovf files>  
+          |--ovp  
+          |   +--<font-package-name>  
+          |           +--<*.ovp files>  
+          |--pfm  
+          |   +--<font-package-name>  
+          |           +--<*.pfm files>  
+          |--pk  
+          |   +--<printer-type>  
+          |           +--<font-package-name>  
+          |                   +--<font-resolution>  
+          |                          +--<*.pk files>  
+          |--sfd  
+          |   +--<font-package-name>  
+          |           +--<*.sfd files>  
+          |--source  
+          |    +--<font-package-name>  
+          |             +--<*.mf files>  
+          |--tfm  
+          |   +--<font-package-name>  
+          |           +--<*.tfm files>  
+          |--truetype  
+          |     +--<font-package-name>  
+          |             +--<*.ttf files>  
+          |--type1  
+          |    +--<font-package-name>  
+          |            +--<*.pfa/*.pfb files>  
+          +--vf  
+              +--<font-package-name>  
+                        +--<*.vf files>  
+  
+In the main texmf fonts tree(s) instead of <font-package-name> actually in almost all directories comes an additional <font-vendor> or public in between.  
+  
+Also most fonts nowadays are shipped out as packages with documentation and style files. These come in  
+  
+<local-texmf>  
+      |--doc  
+      |   +--fonts  
+      |        +--<font-package-name>  
+      |                |--<document files and their *.tex sources>  
+      |                +--<example files>  
+      +tex  
+        |--latex  
+        |    +--<font-package-name>  
+        |             |--<*.fd files>  
+        |             |--<*.sty files>  
+        |             +--<*.tex files [no document sources and examples]>  
+        +--plain  
+             +--<font-package-name>  
+                      |--<*.def files>  
+                      +--<*.tex files [no document sources and examples]>  
+  
+Be careful that fonts and tex are at the same level  
+  
+<local-texmf>  
+     |  
+     +fonts  
+     |  
+     +tex  
+  
+### Second  
+  
+After copying the files you must update the file name data base of your TeX distribution:  
+  
+    In MiKTeX (note also Difference between administrative and user mode of MiKTeX )  
+  
+        Using the GUI: In the Start Menu go to the MiKTeX entry and open the settings – if you act as admin respectively “Settings (Admin)”, of course. The “MiKTeX Options” window will open. Go to the “General” tab and click there on “Refresh FNDB” (FNDB = File Name Data Base).  
+  
+        Using the CLI (command prompt): Execute initexmf --update-fndb (or shorter initexmf -u, as admin add the switch --admin).  
+  
+    In TeX Live  
+        Linux and MacOSX: sudo mktexlsr (or, perhaps better to remember, with alias [symlink to mktexlsr]: sudo texhash.  
+  
+        Windows: mktexlsr (or the alias: texhash)  
+  
+For MetaFont files (*.mf) this is enough.  
+  
+For Open-/TrueType font files (*.otf/*.ttf, the directory names are misleading here, as the file extension does not say anything about OpenType abilities) you should additionally run fc-cache (MiKTeX and TeX Live Windows) or sudo fc-cache (TeX Live Linux and MacOSX) on the command prompt, but then you are ready as well. Nothing more needed for these fonts.  
+  
+But note, that as long as you do not work with a portable TeX distribution it is quite probably better to install Open- or TrueType fonts into the system wide font directory since this is anyway searched and the fonts are added to the font cache with fc-cache.  
+  
+MiKTeX portable users read also External font with portable MiKTeX, Version 2.9, please.  
+  
+### Third  
+  
+For Type1 fonts (see Wikipedia, PostScript fonts) further steps are required:  
+  
+    In MiKTeX (for MiKTeX portable read also External font with portable MiKTeX, Version 2.9!)  
+  
+        On command prompt (here no GUI possible) execute initexmf --edit-config-file=updmap.cfg (or initexmf --edit-config-file updmap). This will open your default text editor with the file updmap.cfg in your user profile under %AppData%\MiKTeX\<version>\miktex\config\. If it did not exist yet, it will be created.  
+  
+        If you add the switch --admin, the file will be created/opened in %AllUsersProfile%\MiKTeX\<version>\miktex\config\ (since Windows Vista) or %AllUsersProfile%\<Application Data>\MiKTeX\<version>\miktex\config\ (until Windows XP, the string <Application Data> is language dependent) and will be valid for all users without an own file name data base.  
+  
+        Add there at least the following (line with # is a comment, we assume here, the Map file has the name fontname.map).  
+  
+        # <font name> or <package name> or what fits better for you  
+        Map fontname.map  
+  
+        Save and exit. If there is more to do, this should to be read in a readme file. For information you could also open the online help page updmap.cfg or the updmap.cfg in your main MiKTeX\miktex\config installation tree and read the comments in it (but do not edit, as every edit will be lost on a later update!).  
+  
+        Execute initexmf -u, this updates the font name data base only for the active user (you can leave this out, if you are sure, your local updmap.cfg already existed).  
+  
+        Execute initexmf --mkmaps (or shorter updmap).  
+  
+    In TeX Live (assuming the according map file name is fontname.map)  
+  
+        In Linux and MacOSX execute sudo updmap-sys --enable Map=fontname.map, in Windows updmap-sys --enable Map=fontname.map.  
+  
+        Make again an update of the file name data base, see second step above.  
+  
+    If you still have problems, you could try the approach given in this answer: Problems installing MathTime Professional 2 font on TexLive.  
+  
+  Reference: https://tex.stackexchange.com/questions/88423/manual-font-installation  
+
+  ## Installing Times New Roman and Cambria Math  
+  ### Times New Roman  
+  $ yay -S ttf-times-new-roman  
+  $ sudo pacman -S texlive-xetex  
+  You might need to run $ sudo fmtutil-sys --all # To regenerate format files, including xelatex.fmt.  
+  ### Cambria Math  
+  Download cambria-math.ttf from this website: https://freefontdownload.org/en/cambria-math.font and put it inside /usr/local/share/fonts/ or smth. Verify with  
+  $ fc-list | grep "Cambria Math"  
+  /usr/local/share/fonts/cambria-math.ttf: Cambria Math:style=Regular  
+  $ file /usr/local/share/fonts/cambria-math.ttf  
+  /usr/local/share/fonts/cambria-math.ttf: TrueType Font data, digitally signed, 20 tables, 1st "DSIG", name offset 0x125b4c  
+  $ ls -l /usr/local/share/fonts/cambria-math.ttf  
+  -rwxr-xr-x 1 root root 1408700 Aug 14 15:30 /usr/local/share/fonts/cambria-math.ttf  
+
+  ## Using Times New Roman and Cambria Math for a LaTeX Word-like document  
+\ProvidesPackage{preamble-word}  
+  
+% Define Unicode character support first  
+\providecommand\DeclareUnicodeCharacter[2]{}  
+  
+\usepackage{fontspec}  
+\usepackage{unicode-math}  
+  
+% Load Times New Roman explicitly with fallbacks  
+\setmainfont[  
+  Path = /usr/share/fonts/TTF/, % Adjust if Times New Roman is elsewhere  
+  UprightFont = times.ttf,  
+  BoldFont = timesbd.ttf,  
+  ItalicFont = timesi.ttf,  
+  BoldItalicFont = timesbi.ttf,  
+  Extension = .ttf  
+]{Times New Roman}  
+  
+  
+\setmathfont{cambria-math.ttf}[  
+  Path = /usr/local/share/fonts/,  
+  Extension = .ttf,  
+  Scale = MatchLowercase  
+]  
+  
+% Russian language support  
+\usepackage{mathtext}  
+\usepackage[T2A]{fontenc}  
+\usepackage[none]{hyphenat}  
+\usepackage[english,russian]{babel}  
+  
+% \usepackage{titlesec}  
+% \titleformat*{\section}{\normalfont\fontsize{14}{18}\bfseries}  
+  
+% Section heading formatting  
+\usepackage{titlesec}  
+% For numbered sections  
+\titleformat{\section}  
+  {\normalfont\fontsize{14}{12}\bfseries\centering}  
+  {\thesection} % Label  
+  %{1em}% Horizontal separation  
+  {0pt}% Horizontal separation  
+  {}% Before-code  
+% For unnumbered sections (like your \section*)  
+\titleformat{name=\section,numberless}  
+  {\normalfont\fontsize{14}{12}\bfseries\centering}  
+  {}% Label (empty for unnumbered)  
+  {0pt}% Horizontal separation  
+  {}% Before-code  
+% Math packages  
+% \titlespacing*{\section}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}  
+% \titlespacing*{name=\section,numberless}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}  
+  
+\titlespacing*{\section}{0pt}{*0}{*0} % {left}{before-sep}{after-sep}    
+\titlespacing*{name=\section,numberless}{0pt}{*0}{*0}    
+  
+\usepackage{amsmath,amsfonts,amsthm}  
+\usepackage{icomma}  
+  
+% Other packages  
+\usepackage{accents}  
+\usepackage{textcomp}  
+\usepackage{pdfpages}  
+\usepackage{hyperref}  
+\hypersetup{  
+    colorlinks,  
+    citecolor=black,  
+    filecolor=black,  
+    linkcolor=black,  
+    urlcolor=blue  
+}  
+  
+% Layout  
+\usepackage[left=3cm, right=1cm, top=2cm, bottom=2cm]{geometry}  
+  
+\usepackage{indentfirst}  
+\setlength{\parindent}{1.25cm}  
+  
+\usepackage{setspace} % Для настройки межстрочного интервала  
+\setstretch{1.5} % Устанавливает интервал 1.5  
+  
+% Microtypography  
+\usepackage{microtype}  
+  
+% Fix for itemize bullets  
+\usepackage{enumitem}  
+\setlist[itemize]{    
+  topsep=0pt,      % Space before the list    
+  partopsep=0pt,   % Extra space in lists after a paragraph break    
+  itemsep=0pt,     % Space between items    
+  parsep=0pt,      % Space between paragraphs within an item    
+  %leftmargin=*,    % Automatic left margin    
+  label={\normalfont\textbullet} % Keep your bullet style    
+}    
+  
+% Page numbering  
+\usepackage{fancyhdr}  
+\fancyhf{}  
+\renewcommand{\headrulewidth}{0pt}  
+\rfoot{\small\thepage}  
+\pagestyle{fancy}  
+  
+% Preamble ended, now begins document. Note: compile with xelatex.  
+\documentclass[a4paper, 14pt]{extarticle}  
+\usepackage{preamble-word}  
+  
+\begin{document}  
+  
+\includepdf[pages={1}]{doc/722_Титульный-лист-2025.pdf}  
+  
+\includepdf[pages={1}]{doc/872_Задание-на-практику-2025.pdf}  
+  
+\includepdf[pages={1}, pagecommand={\thispagestyle{fancy}}]{doc/Введение-2025.pdf}  
+  
+\setlength{\emergencystretch}{3em} % Дополнительное растяжение пробелов  
+\tolerance=2000 % Большая терпимость к неравномерности  
+  
+\section*{2. Расчёт некомпланарного перехода второго типа между двумя круговыми орбитами}  
+    Начальные данные:  
+    \begin{itemize}  
+      \setlength\itemsep{0.5pt}  
+      \item $R = 6371$ км -- средний радиус Земли;  
+      \item $r_0 = 6571$ км -- радиус начальной орбиты;  
+      \item $r_f = 8030$ км -- радиус конечной орбиты;  
+      \item $\Delta i = \Delta i_1 + \Delta i_2 = 30\textdegree$ -- модуль разницы в наклонениях орбит к экватору;  
+      \item $\textmu 398600,44$ км$^3/$c$^2$ -- гравитационный параметр Земли.  
+    \end{itemize}  
+    Вся скорость измеряется в метрах в секунду. На рис. 1 показан вектор $\Delta V_1 $ при переходе на эллиптическую траекторию, представляющий собой векторную разницу между требуемой скоростью КА в перицентре переходного эллипса и скорость КА на опорной круговой орбите. Модуль этого вектора определяется выражением  
+\begin{equation}\label{1}  
+  \Delta V_1 = \sqrt{V_0^2 + V_p^2 - 2V_0V_p \cos(\Delta i_1)}, \tag{1}  
+\end{equation}  
+  где $V_0 = \sqrt{\textmu/r_0} = 7,788$ -- скорость КА на опорной орбите; $V_p = \sqrt{\textmu/p}(1+e) = 8,168$ -- скорость КА в перицентре переходного эллипса, $e$ и $p$ -- эксцентриситет и фокальный параметр переходного эллипса. Величины $e$ и $p$ можно найти по формулам  
+\[  
+    e = \frac{r_f - r_0}{2a} = 0,1, \quad \quad p = a(1-e^2)=7,228\cdot 10^3  
+,\]   
+где $a = (r_0 + r_f)/2 = 7,301\cdot 10^3$ -- большая полуось переходного эллипса.  
+  % где $\displaystyle V_0 = \sqrt{\frac{\mu}{r_0}} $ --- скорость КА на опорной орбите; \setstretch{2.5} $\displaystyle V_p = \sqrt{\mu/p}(1+e) $ -- скорость КА в перицентре переходного эллипса. \setstretch{1.5}  
+  
+% \linespread{1.5}\selectfont % для сохранения межстрочного интервала при переходе на новый абзац.  
+По аналогии с формулой \eqref{1} модуль вектора $\Delta V_2$ может быть определён как   
+\begin{equation}\label{2}  
+  \Delta V_2 = \sqrt{V_f^2 + V_a^2 - 2V_f V_a \cos(\Delta i -\Delta i_1)}, \tag{2}  
+\end{equation}  
+  где $V_f = \sqrt{\textmu/r_f} = 7,045$ -- скорость КА на целевой круговой орбите; $V_a = \sqrt{\textmu/p}(1-e) = 8,168$ -- скорость КА в центре переходного эллипса. Оптимизируемая функция СХС имеет вид   
+\begin{equation}\label{3}  
+  \Delta V_\Sigma = \sqrt{V_0^2 + V_p^2 - 2V_0V_p \cos(\Delta i_1)} + \sqrt{V_f^2 + V_a^2 - 2V_f V_a \cos(\Delta i -\Delta i_1)}, \tag{3}  
+\end{equation}  
+\end{document}  
